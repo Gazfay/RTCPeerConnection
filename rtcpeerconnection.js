@@ -141,7 +141,7 @@ function PeerConnection(config, constraints) {
         };
     }
 
-    this.addStream = this.pc.addStream.bind(this.pc);
+    if (this.pc.addStream) this.addStream = this.pc.addStream.bind(this.pc);
 
     this.removeStream = function (stream) {
         if (typeof self.pc.removeStream === 'function') {
@@ -241,9 +241,10 @@ PeerConnection.prototype._role = function () {
 // Add a stream to the peer connection object
 PeerConnection.prototype.addStream = function (stream) {
     this.localStream = stream;
+    var self = this;
     stream.getTracks().forEach(
         function(track) {
-            this.pc.addTrack(
+            self.pc.addTrack(
                 track,
                 stream
             );
